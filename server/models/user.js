@@ -6,7 +6,7 @@ const roles = {
 }
 
 const userSchema = new mongoose.Schema({
-  login: { type: String, unique: true, required: true },
+  login: { type: String, required: true },
   password: { type: String, required: true },
   roleId: {type: Number, default: roles.USER},
 });

@@ -2,6 +2,8 @@ const express = require("express");
 
 const cors = require("cors");
 
+const bodyParser = require("body-parser");
+
 const User = require('./models/user')
 
 const Kebab = require('./models/kebab')
@@ -13,7 +15,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use(bodyParser.json()); 
+app.use(bodyParser.urlencoded({ extended: true }));
+
 require('dotenv').config()
+
+// i o co biega
+//ogl to jak się user rejestruje i jest pusta baza danych to git
+//ale jak już jednego się zarejestruje i próbuje się następnych to wyskakuje błąd
+
+//AxiosError
 
 const mongoose = require("mongoose");
 mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@react.iuhwkob.mongodb.net/${process.env.DB_NAME}`)
@@ -26,14 +37,19 @@ mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASS
 
   app.post('/register', async (req, res) => {
     try {
-        // Sprawdź unikalność nazwy użytkownika
-        const existingUser = await User.findOne({ username: req.body.username });
+        const existingUser = await User.findOne({ login: req.body.login });
         if (existingUser) {
             return res.status(400).json({ message: "Nazwa użytkownika jest już zajęta" });
         }
 
-        // Jeśli nazwa użytkownika jest unikalna, dodaj użytkownika do bazy danych
-        const newUser = await User.create(req.body);
+        const user = new User ({
+          login: req.body.login,
+          password: req.body.password,
+        });
+      const newUser = await User.create({
+        login: req.body.login,
+        password: req.body.password,
+});
         res.status(201).json(newUser);
     } catch (err) {
         console.error('Błąd podczas rejestracji użytkownika:', err);
