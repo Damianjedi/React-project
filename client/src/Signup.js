@@ -47,7 +47,7 @@ function Signup() {
         </div>
         </nav>
 
-    <div className="container">
+    <div className="signup-container">
     <h1>Logowanie</h1>
     <form id="login">
         <label htmlFor="login">Login:</label>

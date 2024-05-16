@@ -23,11 +23,15 @@ function MyComponent() {
           flex-direction: column;
           position: relative;
           margin-top: 50px;
+          max-width: 1000px;
+          width: 100%;
+          margin: 150px auto auto auto;
         }
 
         .hero-section {
           gap: 20px;
           display: flex;
+          width: 100%;
         }
 
         @media (max-width: 991px) {
@@ -42,7 +46,7 @@ function MyComponent() {
           display: flex;
           flex-direction: column;
           line-height: normal;
-          width: 50%;
+          max-width: 30%;
           margin-left: 0px;
         }
 
@@ -58,34 +62,34 @@ function MyComponent() {
           margin: auto auto auto 10px;
         }
 
-        .hero-image {
+        .main-image {
           display: flex;
-          flex-direction: column;
+          justify-content: center; 
+          align-items: center; 
           line-height: normal;
-          width: 50%;
-          margin-left: 20px;
+        }
+        
+        .main-image img {
+          display: block;
+          max-width: 100%;
+          justify-content: center; 
+          align-items: center; 
+          line-height: normal;
         }
 
+        .image-with-border {
+          max-width: 100%;
+          border-radius: 15px;
+        }
+           
+
         @media (max-width: 991px) {
-          .hero-image {
+          .main-image {
             width: 100%;
           }
         }
 
-        .image-with-border {
-          aspect-ratio: 1.78;
-          object-fit: cover;
-          object-position: center;
-          width: 100%;
-          min-height: 20px;
-          min-width: 20px;
-          overflow: hidden;
-          max-width: 578px;
-          border-style: ridge;
-          border-width: 1px;
-          border-radius: 15px;
-          margin: 20px 20px 0 0;
-        }
+        
 
         .cta-section {
           display: flex;
@@ -119,7 +123,10 @@ function MyComponent() {
           border-width: 1px;
           border-style: solid;
           border-color: rgba(255, 255, 255, 1);
+          max-width: 1000px; 
+          width: 100%;
         }
+
 
         .cta-content {
           display: flex;
@@ -131,6 +138,7 @@ function MyComponent() {
         .cta-row {
           gap: 20px;
           display: flex;
+          margin: auto;
         }
 
         @media (max-width: 991px) {
@@ -248,6 +256,21 @@ function MyComponent() {
         }
       `}</style>
 
+    <div>
+        <nav className="navbar">
+        <div className="left-items">
+            <a href="home">Home</a>
+            <a href="menu">Menu</a>
+            <a href="oceny">Oceny</a>
+            <a href="#">Zamówienia</a>
+        </div>
+        <div className="right-items">
+            <a href="register">Logowanie</a>
+            <a href="register">Rejestracja</a>
+        </div>
+        </nav>
+      </div>
+
       <div className="container">
         <section className="hero-section">
           <div className="hero-text">
@@ -271,7 +294,7 @@ function MyComponent() {
               </p>
             </div>
           </div>
-          <div className="hero-image">
+          <div className="main-image">
             <ImageWithBorder
               src="https://cdn.builder.io/api/v1/image/assets%2F2182ec7e4b424e46ad77e739f9fef46e%2Fdea9a774b80740a6ba41bef50a5fa4b4"
               alt="Authentic Turkish kebab dish"
