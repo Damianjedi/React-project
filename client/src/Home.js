@@ -1,5 +1,5 @@
 import React from "react";
-
+import Weather from "./weather";
 
 
 function Button({ children, onClick }) {
@@ -14,18 +14,20 @@ function ImageWithBorder({ src, alt }) {
   return <img className="image-with-border" src={src} alt={alt} />;
 }
 
+
 function MyComponent() {
+
   return (
     <>
       <style jsx>{`
+      
         .container {
           display: flex;
           flex-direction: column;
           position: relative;
           margin-top: 50px;
-          max-width: 1000px;
+          max-witdth: 1000px;
           width: 100%;
-          margin: 150px auto auto auto;
         }
 
         .hero-section {
@@ -256,20 +258,11 @@ function MyComponent() {
         }
       `}</style>
 
-    <div>
-        <nav className="navbar">
-        <div className="left-items">
-            <a href="home">Home</a>
-            <a href="menu">Menu</a>
-            <a href="oceny">Oceny</a>
-            <a href="#">Zamówienia</a>
-        </div>
-        <div className="right-items">
-            <a href="register">Logowanie</a>
-            <a href="register">Rejestracja</a>
-        </div>
-        </nav>
-      </div>
+<div>
+      <Weather />
+    </div>
+
+
 
       <div className="container">
         <section className="hero-section">
@@ -286,7 +279,7 @@ function MyComponent() {
               <p>
                 <span style={{ fontSize: "16px" }}>
                   Witaj w naszym autentycznym kawałku Turcji, gdzie smak i aromat
-                  łączą się w magiczny taniec przy każdym kęsie. Zapraszamy do
+                  łączą się w magiczny taniec brzucha przy każdym kęsie. Zapraszamy do
                   naszego lokalu gastronomicznego, gdzie serwujemy najwyższej
                   jakości kebaby, przygotowane z pasją i tradycją, które
                   przeniosą Cię prosto na ulice Stambułu.
@@ -358,6 +351,7 @@ function MyComponent() {
     </>
   );
 }
+
 
 export default MyComponent;
 

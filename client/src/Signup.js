@@ -21,7 +21,7 @@ function Signup() {
             });
             if (response.ok) {
                 console.log("Rejestracja udana");
-                navigate('/home');
+                navigate('/register');
             } else if (response.status === 400) {
                 console.log("Nazwa użytkownika jest już zajęta");
             } else {
@@ -31,6 +31,39 @@ function Signup() {
             console.error("Błąd podczas rejestracji:", err);
         }
     };
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch('http://localhost:3001/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ login, password }),
+            });
+    
+            if (response.status === 200) {
+                console.log("Logowanie udane");
+                localStorage.setItem('isLoggedIn', true);
+                
+                // Pobieranie danych z odpowiedzi
+                const data = await response.json();
+                
+                if (data.id === 2) {
+                    localStorage.setItem('isAdmin', true);
+                    console.log("Zalogowano jako admin");
+                }
+                
+                navigate('/home');
+            } else {
+                console.error("Błąd podczas logowania:", response.statusText);
+            }
+        } catch (err) {
+            console.error("Błąd podczas logowania:", err);
+        }
+    };
+
     return (
         
         <div>
@@ -42,20 +75,13 @@ function Signup() {
             <a href="#">Zamówienia</a>
         </div>
         <div className="right-items">
-            <a href="register">Logowanie</a>
+            <a href="login">Logowanie</a>
             <a href="register">Rejestracja</a>
         </div>
         </nav>
 
     <div className="signup-container">
-    <h1>Logowanie</h1>
-    <form id="login">
-        <label htmlFor="login">Login:</label>
-        <input type="text" id="username2" name="login" required/>
-        <label htmlFor="password">Hasło:</label>
-        <input type="password" id="password2" name="password" required/>
-        <button type="submit" className="loginbtn">Zaloguj</button>
-    </form>
+   
 
     <h2>Rejestracja</h2>
     <form onSubmit={handleSubmit} id="register" >
