@@ -69,6 +69,15 @@ function Menu() {
     }
   };
 
+  const deleteProduct = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3001/menu/${id}`);
+      fetchMenuItems();
+    } catch (error) {
+      console.error('Błąd przy usuwaniu produktu', error);
+    }
+  };
+
   const calculateTotalPrice = () => {
     const total = cartItems.reduce((acc, item) => acc + item.Cena, 0);
     setTotalPrice(total);
@@ -115,6 +124,7 @@ function Menu() {
           <li key={item._id}>
             {item.product} - Opis: {item.Opis} - Cena: {item.Cena} zł
             <button id="addCart" onClick={() => addToCart(item)}>Dodaj do koszyka</button> 
+            <button id="deleteProduct" onClick={() => deleteProduct(item._id)}>Usuń produkt</button>
           </li>
         ))}
       </ul>

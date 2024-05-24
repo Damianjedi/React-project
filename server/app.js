@@ -8,9 +8,15 @@ const User = require('./models/user')
 
 const Kebab = require('./models/kebab')
 
+const Opinion = require('./models/opinie');
+
+const authMiddleware = require('./middleware/authMiddleware');
+
 const PORT = process.env.PORT || 3001;
 
 const app = express();
+
+const jwt = require('jsonwebtoken');
 
 app.use(cors());
 app.use(express.json());
@@ -57,6 +63,39 @@ mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASS
     }
 });
 
+app.post('/login', async (req, res) => {
+  try {
+      const { login, password } = req.body;
+      
+      // Sprawdzanie, czy użytkownik istnieje w bazie danych
+      const user = await User.findOne({ login });
+
+      if (!user) {
+          return res.status(400).json({ message: "Nieprawidłowy login lub hasło." });
+      }
+
+      // Sprawdzanie poprawności hasła
+      if (user.password !== password) {
+          return res.status(400).json({ message: "Nieprawidłowy login lub hasło" });
+      }
+
+
+      const token = jwt.sign({ login: user.login }, 'super_tajny_klucz', { expiresIn: '1h' });
+
+      if (user.roleId === 2) {
+        res.status(200).json({ id: user.roleId, login: user.login, isAdmin: true, token });
+    } else {
+        // Jeśli użytkownik nie jest administratorem, zwróć standardowy status 200
+        res.status(200).json({ id: user.roleId, login: user.login, token });
+    }
+
+  } catch (err) {
+      console.error('Błąd podczas logowania użytkownika:', err);
+      res.status(500).json({ message: "Wystąpił błąd podczas logowania użytkownika" });
+  }
+});
+
+
 app.get('/menu', async (req, res) => {
   try {
     const menuItems = await Kebab.find();
@@ -78,6 +117,47 @@ app.post('/menu', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+app.delete('/menu/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Kebab.findByIdAndDelete(id);
+    res.status(200).send('Produkt został pomyślnie usunięty.');
+  } catch (error) {
+    console.error('Błąd podczas usuwania produktu:', error);
+    res.status(500).send('Wystąpił błąd podczas usuwania produktu.');
+  }
+});
+
+
+app.get('/opinions', async (req, res) => {
+  try {
+    const opinions = await Opinion.find().populate('user', 'login'); // Pobranie opinii wraz z danymi użytkownika (tylko login)
+    res.json(opinions);
+  } catch (error) {
+    console.error('Błąd przy pobieraniu opinii:', error);
+    res.status(500).json({ message: 'Wystąpił błąd przy pobieraniu opinii' });
+  }
+});
+
+app.post('/opinions', authMiddleware, async (req, res) => {
+  const { text } = req.body;
+  const userId = req.user.id; // ID zalogowanego użytkownika
+  
+  try {
+    const newOpinion = new Opinion({
+      text,
+      user: userId
+    });
+
+    const savedOpinion = await newOpinion.save();
+    res.status(201).json(savedOpinion);
+  } catch (error) {
+    console.error('Błąd przy dodawaniu opinii:', error);
+    res.status(500).json({ message: 'Wystąpił błąd przy dodawaniu opinii' });
+  }
+});
+
 
 
 app.listen(PORT, () => {

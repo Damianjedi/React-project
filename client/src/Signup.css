@@ -2,12 +2,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
 
-.container {
+.signup-container {
 
     max-width: 400px;
     margin: 200px auto;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid #ccc; 
     border-radius: 5px;
   }
   
