@@ -5,7 +5,6 @@ const kebabSchema = new mongoose.Schema({
   product: { type: String, required: true },
   Opis: { type: String, required: true },
   Cena: {type: Number},
-  Obraz: {type: String},
   imageUrl: {type: String},
 });
 

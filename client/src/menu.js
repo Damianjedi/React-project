@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import "./menu.css";
+import { useNavigate } from 'react-router-dom';
 
 function Menu() {
   const [menuItems, setMenuItems] = useState([]);
   const [cartItems, setCartItems] = useState([]);
   const [newItemData, setNewItemData] = useState({ product: '', Opis: '', Cena: '', imageUrl: '' });
   const [totalPrice, setTotalPrice] = useState(0);
+  const [isAdmin, setisAdmin] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const Admin = localStorage.getItem('isAdmin');
+    if (Admin) {
+      setisAdmin(true);
+    }
+  }, []);
+
 
   useEffect(() => {
     fetchMenuItems();
@@ -35,7 +46,14 @@ function Menu() {
   };
 
   const addToCart = (item) => {
-    setCartItems([...cartItems, item]);
+    const existingItemIndex = cartItems.findIndex(cartItem => cartItem._id === item._id);
+    if (existingItemIndex !== -1) {
+      const newCartItems = [...cartItems];
+      newCartItems[existingItemIndex].quantity += 1;
+      setCartItems(newCartItems);
+    } else {
+    setCartItems([...cartItems, {...item, quantity: 1}]);
+    }
   };
 
   const removeFromCart = (index) => {
@@ -47,6 +65,12 @@ function Menu() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewItemData({ ...newItemData, [name]: value });
+  };
+
+  const handleQuantityChange = (index, value) => {
+    const newCartItems = [...cartItems];
+    newCartItems[index].quantity = value > 0 ? value : 1;
+    setCartItems(newCartItems);
   };
 
   const handleSubmit = async (e) => {
@@ -70,12 +94,19 @@ function Menu() {
   };
 
   const calculateTotalPrice = () => {
-    const total = cartItems.reduce((acc, item) => acc + parseFloat(item.Cena), 0);
+    const total = cartItems.reduce((acc, item) => acc + (item.Cena * item.quantity), 0);
     setTotalPrice(total);
+  };
+
+  const goToPayment = () => {
+    navigate('/payment', { state: { cartItems, totalPrice}});
   };
 
   return (
     <div>
+      
+      { isAdmin ? (
+      <div>
       <h1>Dodawanie produktu do menu (admin)</h1>
       <form onSubmit={handleSubmit} className="add-product-form">
         <input
@@ -106,17 +137,20 @@ function Menu() {
           onKeyDown={validateNumberInput}
           required
         />
-        <input
-          id="productImage"
+        <input 
+          id="productImg"
           type="text"
-          name="imageUrl"
+          name="adresZdjęcia"
           placeholder="Adres URL"
           value={newItemData.imageUrl}
           onChange={handleInputChange}
-          required
         />
-        <button id="newCart" type="submit">Dodaj Produkt</button>
+        <button id="newCart" type="submit">Dodaj Kebaba</button>
       </form>
+      </div>
+      ) : (
+        <p></p>
+      )}
 
       <h2>Menu</h2>
       <div className="menu-grid">
@@ -127,23 +161,25 @@ function Menu() {
             <p>Opis: {item.Opis}</p>
             <p>Cena: {item.Cena} zł</p>
             <button id="addCart" onClick={() => addToCart(item)}>Dodaj do koszyka</button> 
+            { isAdmin && (
             <button id="deleteProduct" onClick={() => deleteProduct(item._id)}>Usuń produkt</button>
-          </div>
+            )}
+          </li>
         ))}
       </div>
 
-      <h2>Cart</h2>
-      <div className="cart-grid">
+      <h2>Koszyk</h2>
+      <ul>
         {cartItems.map((item, index) => (
-          <div key={index} className="cart-item">
-            <img src={item.imageUrl} alt={item.product} className="product-image" />
-            <h3>{item.product}</h3>
-            <p>Cena: {item.Cena} zł</p>
+          <li 
+            key={index}>{item.product} - Cena: {item.Cena} zł - Ilość:  
+            <input id="numberOfProducts" type="number" min="1" value={item.quantity} onChange={(e) => handleQuantityChange(index, Number(e.target.value))} />
             <button id="removeCart" onClick={() => removeFromCart(index)}>Usuń</button>
           </div>
         ))}
-      </div>
-      <h2>Suma do zapłacenia: {totalPrice.toFixed(2)} zł</h2>
+      </ul>
+      <h2>Suma do zapłacenia: {totalPrice} zł</h2>
+      <button id="goToPayment" onClick={goToPayment} disabled={cartItems.length === 0}>Przejdź do podsumowania</button>
     </div>
   );
 }

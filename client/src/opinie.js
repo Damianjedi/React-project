@@ -12,21 +12,23 @@ function Opinions() {
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
-    const LoggedIn = localStorage.getItem('isLoggedIn');
-    if (storedToken && LoggedIn) {
+    const loggedIn = localStorage.getItem('isLoggedIn');
+    if (storedToken && loggedIn) {
       setToken(storedToken);
       setIsLoggedIn(true);
     }
-    fetchOpinions();
   }, []);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchOpinions();
+    }
+  }, [isLoggedIn]);
 
   const fetchOpinions = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/opinions', {
-        headers: {
-          Authorization: `Bearer ${token}` // Przekazanie tokenu JWT w nagłówku
-        }
-      });
+      const response = await axios.get('http://localhost:3001/opinions');
+        
       setOpinions(response.data);
     } catch (error) {
       console.error('Błąd przy pobieraniu opinii:', error);
@@ -42,7 +44,7 @@ function Opinions() {
     try {
       await axios.post('http://localhost:3001/opinions', { text: newOpinionText }, {
         headers: {
-          Authorization: `Bearer ${token}` // Przekazanie tokenu JWT w nagłówku
+          Authorization: `Bearer ${token}` 
         }
       });
       setNewOpinionText('');
