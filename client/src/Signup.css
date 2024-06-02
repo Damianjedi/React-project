@@ -39,8 +39,34 @@
     font-weight: 200;
   }
   
-  input[type="text"],
-  input[type="password"] {
+  #register input[type="text"] {
+    width: 100%;
+    max-width: 400px;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  #register input[type="password"] {
+    width: 100%;
+    max-width: 400px;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  #login input[type="text"] {
+    width: 100%;
+    max-width: 400px;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  #login input[type="password"] {
     width: 100%;
     max-width: 400px;
     padding: 8px;

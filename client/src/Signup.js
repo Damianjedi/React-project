@@ -47,7 +47,7 @@ function Signup() {
                 console.log("Logowanie udane");
                 localStorage.setItem('isLoggedIn', true);
                 
-                // Pobieranie danych z odpowiedzi
+                
                 const data = await response.json();
                 
                 if (data.id === 2) {

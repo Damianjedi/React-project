@@ -24,16 +24,22 @@ function MyComponent() {
         .container {
           display: flex;
           flex-direction: column;
-          position: relative;
           margin-top: 50px;
-          max-witdth: 1000px;
-          width: 100%;
+          position: relative;
         }
 
         .hero-section {
           gap: 20px;
           display: flex;
+          flex-direction: row;
+          position: relative;
+          min-height: 100px;
+          padding: 20px;
           width: 100%;
+          max-width: 1200px;
+          margin-left: auto;
+          margin-right: auto;
+          justify-content: space-between;
         }
 
         @media (max-width: 991px) {
@@ -108,7 +114,6 @@ function MyComponent() {
           min-height: 100px;
           padding: 20px;
           width: 100%;
-          align-self: stretch;
           flex-grow: 1;
           max-width: 1200px;
           margin-left: auto;
@@ -141,6 +146,7 @@ function MyComponent() {
           gap: 20px;
           display: flex;
           margin: auto;
+          justify-content: space-between;
         }
 
         @media (max-width: 991px) {
@@ -215,6 +221,7 @@ function MyComponent() {
         .review-row {
           gap: 20px;
           display: flex;
+          justify-content: space-between;
         }
 
         @media (max-width: 991px) {
@@ -256,10 +263,39 @@ function MyComponent() {
           max-width: 250px;
           margin: 20px auto 0;
         }
+
+
+        .home-weather {
+          margin: 125px auto 50px auto;
+        }
+
+        .home-weather-content {
+
+        }
+
       `}</style>
 
-<div>
+        <nav className="navbar">
+        <div className="left-items">
+            <a href="home">Home</a>
+            <a href="menu">Menu</a>
+            <a href="oceny">Oceny</a>
+            <a href="#">Zamówienia</a>
+        </div>
+        <div className="right-items">
+            <a href="login">Logowanie</a>
+            <a href="register">Rejestracja</a>
+        </div>
+        </nav>
+
+
+
+        <div className="home-weather">
+          <div className="home-weather-content">
       <Weather />
+      </div>
+        <div className="home-weather-icon">
+        </div>
     </div>
 
 
@@ -289,8 +325,7 @@ function MyComponent() {
           </div>
           <div className="main-image">
             <ImageWithBorder
-              src="https://cdn.builder.io/api/v1/image/assets%2F2182ec7e4b424e46ad77e739f9fef46e%2Fdea9a774b80740a6ba41bef50a5fa4b4"
-              alt="Authentic Turkish kebab dish"
+              src="https://www.guldfageln.se/app/uploads/2020/12/ChickenKebab_pitabrod.jpg"
             />
           </div>
         </section>

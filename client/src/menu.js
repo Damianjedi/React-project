@@ -5,7 +5,7 @@ import "./menu.css";
 function Menu() {
   const [menuItems, setMenuItems] = useState([]);
   const [cartItems, setCartItems] = useState([]);
-  const [newItemData, setNewItemData] = useState({ product: '', Opis: '', Cena: '' });
+  const [newItemData, setNewItemData] = useState({ product: '', Opis: '', Cena: '', imageUrl: '' });
   const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
@@ -18,22 +18,13 @@ function Menu() {
 
   const validateNumberInput = (event) => {
     const keyCode = event.keyCode || event.which;
-  
-    if (
-      !(
-        keyCode === 8 ||
-        keyCode === 9 ||
-        keyCode === 46 ||
-        (keyCode >= 37 && keyCode <= 40)
-      )
-    ) {
+    if (!(keyCode === 8 || keyCode === 9 || keyCode === 46 || (keyCode >= 37 && keyCode <= 40))) {
       if (keyCode < 48 || keyCode > 57) {
         event.preventDefault();
       }
     }
   };
-  
-  
+
   const fetchMenuItems = async () => {
     try {
       const response = await axios.get('http://localhost:3001/menu'); 
@@ -62,7 +53,7 @@ function Menu() {
     e.preventDefault();
     try {
         await axios.post('http://localhost:3001/menu', newItemData);
-        setNewItemData({ product: '', Opis: '', Cena: ''});
+        setNewItemData({ product: '', Opis: '', Cena: '', imageUrl: ''});
         fetchMenuItems();
     } catch (error) {
         console.error('Błąd przy dodawaniu produktów', error);
@@ -79,14 +70,14 @@ function Menu() {
   };
 
   const calculateTotalPrice = () => {
-    const total = cartItems.reduce((acc, item) => acc + item.Cena, 0);
+    const total = cartItems.reduce((acc, item) => acc + parseFloat(item.Cena), 0);
     setTotalPrice(total);
-  }
+  };
 
   return (
     <div>
       <h1>Dodawanie produktu do menu (admin)</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="add-product-form">
         <input
           id="productName"
           type="text"
@@ -100,7 +91,7 @@ function Menu() {
           id="productDesc"
           type="text"
           name="Opis"
-          placeholder="Opis produktu"
+          placeholder="Opis"
           value={newItemData.Opis}
           onChange={handleInputChange}
           required
@@ -109,36 +100,50 @@ function Menu() {
           id="productPrice"
           type="text"
           name="Cena"
-          placeholder="Price"
+          placeholder="Cena"
           value={newItemData.Cena}
           onChange={handleInputChange}
           onKeyDown={validateNumberInput}
           required
         />
-        <button id="newCart" type="submit">Dodaj Kebaba</button>
+        <input
+          id="productImage"
+          type="text"
+          name="imageUrl"
+          placeholder="Adres URL"
+          value={newItemData.imageUrl}
+          onChange={handleInputChange}
+          required
+        />
+        <button id="newCart" type="submit">Dodaj Produkt</button>
       </form>
 
       <h2>Menu</h2>
-      <ul>
+      <div className="menu-grid">
         {menuItems.map((item) => (
-          <li key={item._id}>
-            {item.product} - Opis: {item.Opis} - Cena: {item.Cena} zł
+          <div key={item._id} className="menu-item">
+            <img src={item.imageUrl} alt={item.product} className="product-image" />
+            <h3>{item.product}</h3>
+            <p>Opis: {item.Opis}</p>
+            <p>Cena: {item.Cena} zł</p>
             <button id="addCart" onClick={() => addToCart(item)}>Dodaj do koszyka</button> 
             <button id="deleteProduct" onClick={() => deleteProduct(item._id)}>Usuń produkt</button>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
 
       <h2>Cart</h2>
-      <ul>
+      <div className="cart-grid">
         {cartItems.map((item, index) => (
-          <li 
-            key={index}>{item.product} - Cena: {item.Cena} zł
+          <div key={index} className="cart-item">
+            <img src={item.imageUrl} alt={item.product} className="product-image" />
+            <h3>{item.product}</h3>
+            <p>Cena: {item.Cena} zł</p>
             <button id="removeCart" onClick={() => removeFromCart(index)}>Usuń</button>
-          </li>
+          </div>
         ))}
-      </ul>
-      <h2>Suma do zapłacenia: {totalPrice} zł</h2>
+      </div>
+      <h2>Suma do zapłacenia: {totalPrice.toFixed(2)} zł</h2>
     </div>
   );
 }
