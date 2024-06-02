@@ -10,7 +10,10 @@ const Kebab = require('./models/kebab')
 
 const Opinion = require('./models/opinie');
 
-const authMiddleware = require('./middleware/authMiddleware');
+const Order = require('./models/order');
+
+const crypto = require('crypto');
+
 
 const PORT = process.env.PORT || 3001;
 
@@ -25,6 +28,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 require('dotenv').config()
+
+const authenticateToken = require('./middleware/authMiddleware');
+
 
 // i o co biega
 //ogl to jak się user rejestruje i jest pusta baza danych to git
@@ -63,6 +69,10 @@ mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASS
     }
 });
 
+function hashLogin(login) {
+  return crypto.createHash('sha256').update(login).digest('hex');
+}
+
 app.post('/login', async (req, res) => {
   try {
       const { login, password } = req.body;
@@ -79,8 +89,7 @@ app.post('/login', async (req, res) => {
           return res.status(400).json({ message: "Nieprawidłowy login lub hasło" });
       }
 
-
-      const token = jwt.sign({ login: user.login }, 'super_tajny_klucz', { expiresIn: '1h' });
+      const token = `user-${user._id}`;
 
       if (user.roleId === 2) {
         res.status(200).json({ id: user.roleId, login: user.login, isAdmin: true, token });
@@ -140,14 +149,19 @@ app.get('/opinions', async (req, res) => {
   }
 });
 
-app.post('/opinions', authMiddleware, async (req, res) => {
+app.post('/opinions', authenticateToken, async (req, res) => {
   const { text } = req.body;
-  const userId = req.user.id; // ID zalogowanego użytkownika
-  
+  const userId = req.userId;
+
   try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: 'Nie znaleziono użytkownika' });
+    }
+
     const newOpinion = new Opinion({
       text,
-      user: userId
+      user: userId,
     });
 
     const savedOpinion = await newOpinion.save();
@@ -155,6 +169,87 @@ app.post('/opinions', authMiddleware, async (req, res) => {
   } catch (error) {
     console.error('Błąd przy dodawaniu opinii:', error);
     res.status(500).json({ message: 'Wystąpił błąd przy dodawaniu opinii' });
+  }
+});
+
+app.post('/orders', authenticateToken, async (req, res) => {
+  const { orderType, tableNumber, address, contactInfo, paymentMethod, cartItems, totalPrice } = req.body;
+  const userId = req.userId;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: 'Nie znaleziono użytkownika' });
+    }
+
+  const newOrder = new Order({
+    orderType,
+    tableNumber,
+    address,
+    contactInfo,
+    paymentMethod,
+    cartItems,
+    totalPrice,
+    status: 'złożone',
+    user,
+    
+  });
+
+
+  
+    const savedOrder = await newOrder.save();
+    res.status(201).json(savedOrder);
+  } catch (error) {
+    res.status(400).json({ error: 'Failed to save order' });
+  
+  }
+});
+
+
+app.get('/orders', async (req, res) => {
+  try {
+    const orders = await Order.find().populate('user', 'login');
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch orders' });
+  }
+});
+
+// Delete an order
+app.delete('/orders/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedOrder = await Order.findByIdAndDelete(id);
+    if (!deletedOrder) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    res.status(200).json(deletedOrder);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete order' });
+  }
+});
+
+app.put('/orders/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const updatedOrder = await Order.findByIdAndUpdate(id, { status }, { new: true });
+    if (!updatedOrder) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    res.status(200).json(updatedOrder);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update order status' });
+  }
+});
+
+app.get('/orders/user', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.userId;
+    const orders = await Order.find({ user: userId }).populate('user', 'login');
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch orders' });
   }
 });
 
