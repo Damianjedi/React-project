@@ -117,8 +117,8 @@ app.get('/menu', async (req, res) => {
 
 app.post('/menu', async (req, res) => {
   try {
-    const { product, Opis, Cena } = req.body;
-    const newItem = new Kebab({ product, Opis, Cena });
+    const { product, Opis, Cena, imageUrl } = req.body;
+    const newItem = new Kebab({ product, Opis, Cena, imageUrl });
     const savedItem = await newItem.save();
     res.status(201).json(savedItem);
   } catch (error) {

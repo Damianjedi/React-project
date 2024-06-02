@@ -127,9 +127,6 @@ function MyComponent() {
           margin-top: 20px;
           height: auto;
           padding-bottom: 30px;
-          border-width: 1px;
-          border-style: solid;
-          border-color: rgba(255, 255, 255, 1);
           max-width: 1000px; 
           width: 100%;
         }
@@ -269,8 +266,11 @@ function MyComponent() {
           margin: 125px auto 50px auto;
         }
 
-        .home-weather-content {
-
+        .home-weather-content img {
+          width: 100%;
+          height: 100%;
+          max-width: 200px;
+          max-height: 200px;
         }
 
       `}</style>

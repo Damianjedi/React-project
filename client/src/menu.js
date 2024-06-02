@@ -103,11 +103,28 @@ function Menu() {
   };
 
   return (
+
+    
+
+    
     <div>
+
+<nav className="navbar">
+        <div className="left-items">
+            <a href="home">Home</a>
+            <a href="menu">Menu</a>
+            <a href="opinie">Oceny</a>
+            <a href="orders">Zamówienia</a>
+        </div>
+        <div className="right-items">
+            <a href="login">Logowanie</a>
+            <a href="register">Rejestracja</a>
+        </div>
+        </nav>
       
       { isAdmin ? (
       <div>
-      <h1>Dodawanie produktu do menu (admin)</h1>
+      <h1 id="menutitle">Dodawanie produktu do menu</h1>
       <form onSubmit={handleSubmit} className="add-product-form">
         <input
           id="productName"
@@ -140,46 +157,62 @@ function Menu() {
         <input 
           id="productImg"
           type="text"
-          name="adresZdjęcia"
-          placeholder="Adres URL"
+          name="imageUrl"
+          placeholder="Adres URL obrazu"
           value={newItemData.imageUrl}
           onChange={handleInputChange}
         />
-        <button id="newCart" type="submit">Dodaj Kebaba</button>
+        <button id="newCart" type="submit">Dodaj</button>
       </form>
       </div>
       ) : (
         <p></p>
       )}
 
-      <h2>Menu</h2>
-      <div className="menu-grid">
-        {menuItems.map((item) => (
-          <div key={item._id} className="menu-item">
-            <img src={item.imageUrl} alt={item.product} className="product-image" />
-            <h3>{item.product}</h3>
-            <p>Opis: {item.Opis}</p>
-            <p>Cena: {item.Cena} zł</p>
-            <button id="addCart" onClick={() => addToCart(item)}>Dodaj do koszyka</button> 
-            { isAdmin && (
-            <button id="deleteProduct" onClick={() => deleteProduct(item._id)}>Usuń produkt</button>
-            )}
-          </li>
-        ))}
-      </div>
+<h2>Menu</h2>
+<div className="menu-grid">
+    {menuItems.map((item) => (
+        <div key={item._id} className="menu-item">
+            <div className="menu-item-container">
+                <img src={item.imageUrl} alt={item.product} className="product-image" />
+                <h3>{item.product}</h3>
+                <p>Opis: {item.Opis}</p>
+                <p>Cena: {item.Cena} zł</p>
+                <div className="button-container">
+                    <button id="addCart" onClick={() => addToCart(item)}>Dodaj do koszyka</button>
+                    { isAdmin && (
+                    <button id="deleteProduct" onClick={() => deleteProduct(item._id)}>Usuń produkt</button>
+                    )}
+                </div>
+            </div>
+        </div>
+    ))}
+</div>
 
-      <h2>Koszyk</h2>
-      <ul>
+
+<h2>Koszyk</h2>
+<div className="cart-list-grid">
+    <div className="cart-list">
         {cartItems.map((item, index) => (
-          <li 
-            key={index}>{item.product} - Cena: {item.Cena} zł - Ilość:  
-            <input id="numberOfProducts" type="number" min="1" value={item.quantity} onChange={(e) => handleQuantityChange(index, Number(e.target.value))} />
-            <button id="removeCart" onClick={() => removeFromCart(index)}>Usuń</button>
-          </div>
+            <li key={index}>
+                Produkt: {item.product} | Cena: {item.Cena} zł/szt | Ilość:
+                <input 
+                    id="numberOfProducts" 
+                    type="number" 
+                    min="1" 
+                    value={item.quantity} 
+                    onChange={(e) => handleQuantityChange(index, Number(e.target.value))} 
+                />
+                <button onClick={() => removeFromCart(index)}>Usuń</button>
+            </li>
         ))}
-      </ul>
-      <h2>Suma do zapłacenia: {totalPrice} zł</h2>
+    </div>
+</div>
+
+      <h2>Suma do zapłaty: {totalPrice} zł</h2>
+      <div className="cart-summary">
       <button id="goToPayment" onClick={goToPayment} disabled={cartItems.length === 0}>Przejdź do podsumowania</button>
+      </div>
     </div>
   );
 }
