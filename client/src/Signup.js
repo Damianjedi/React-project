@@ -21,7 +21,7 @@ function Signup() {
             });
             if (response.ok) {
                 console.log("Rejestracja udana");
-                navigate('/register');
+                navigate('/login');
             } else if (response.status === 400) {
                 console.log("Nazwa użytkownika jest już zajęta");
             } else {
