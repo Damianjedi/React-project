@@ -31,6 +31,20 @@ function OrderStatusClient() {
 
   return (
     <div>
+
+<nav className="navbar">
+        <div className="left-items">
+            <a href="home">Home</a>
+            <a href="menu">Menu</a>
+            <a href="opinie">Oceny</a>
+            <a href="orders">Zamówienia</a>
+        </div>
+        <div className="right-items">
+            <a href="login">Logowanie</a>
+            <a href="register">Rejestracja</a>
+        </div>
+        </nav>
+        
       <h2>Twoje zamówienia</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <ul>
@@ -57,6 +71,14 @@ function OrderStatusClient() {
           </li>
         ))}
       </ul>
+
+      <footer class="footer">
+<p class="copyright">
+    KEBABEE Copyright 
+    <span class="year">© 2024</span> - 
+    All rights reserved
+</p>
+</footer>
     </div>
   );
 }

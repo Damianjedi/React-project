@@ -24,12 +24,12 @@ function MyComponent() {
 <>
 
 
-        <nav className="navbar">
+<nav className="navbar">
         <div className="left-items">
             <a href="home">Home</a>
             <a href="menu">Menu</a>
-            <a href="oceny">Oceny</a>
-            <a href="#">Zamówienia</a>
+            <a href="opinie">Oceny</a>
+            <a href="orders">Zamówienia</a>
         </div>
         <div className="right-items">
             <a href="login">Logowanie</a>
@@ -37,15 +37,6 @@ function MyComponent() {
         </div>
         </nav>
 
-
-
-        <div className="home-weather">
-          <div className="home-weather-content">
-      <Weather />
-      </div>
-        <div className="home-weather-icon">
-        </div>
-    </div>
 
 
 
@@ -133,29 +124,21 @@ function MyComponent() {
         </section>
       </div>
 
-      <footer>
-        <div class="footer">
-          <div class="row">
-              <a href="#"><i class="fa fa-facebook"></i></a>
-              <a href="#"><i class="fa fa-instagram"></i></a>
-              <a href="#"><i class="fa fa-youtube"></i></a>
-              <a href="#"><i class="fa fa-twitter"></i></a>
-          </div>
+      <div className="home-weather">
+          <div className="home-weather-content">
+      <Weather />
+      </div>
+        <div className="home-weather-icon">
+        </div>
+    </div>
 
-            <div class="row">
-              <ul>
-              <li><a href="#">Zamówienia</a></li>
-              <li><a href="#">Regulamin</a></li>
-              <li><a href="#">O nas</a></li>
-              <li><a href="#">Career</a></li>
-              </ul>
-            </div>
-
-          <div class="row">
-          KEBABEE Copyright © 2024 - All rights reserved 
-          </div>
-          </div>
-          </footer>
+      <footer class="footer">
+        <p class="copyright">
+            KEBABEE Copyright 
+            <span class="year">© 2024</span> - 
+            All rights reserved
+        </p>
+    </footer>
       
     </>
   );

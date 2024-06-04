@@ -213,7 +213,17 @@ function Menu() {
       <div className="cart-summary">
       <button id="goToPayment" onClick={goToPayment} disabled={cartItems.length === 0}>Przejdź do podsumowania</button>
       </div>
+
+      <footer class="footer">
+<p class="copyright">
+    KEBABEE Copyright 
+    <span class="year">© 2024</span> - 
+    All rights reserved
+</p>
+</footer>
     </div>
+
+
   );
 }
 

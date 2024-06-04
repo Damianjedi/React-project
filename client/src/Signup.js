@@ -71,8 +71,8 @@ function Signup() {
         <div className="left-items">
             <a href="home">Home</a>
             <a href="menu">Menu</a>
-            <a href="oceny">Oceny</a>
-            <a href="#">Zamówienia</a>
+            <a href="opinie">Oceny</a>
+            <a href="orders">Zamówienia</a>
         </div>
         <div className="right-items">
             <a href="login">Logowanie</a>
@@ -92,6 +92,14 @@ function Signup() {
         <button type="submit" className="registerbtn">Zarejestruj</button>
     </form>
     </div>
+
+    <footer class="footer">
+<p class="copyright">
+    KEBABEE Copyright 
+    <span class="year">© 2024</span> - 
+    All rights reserved
+</p>
+</footer>
 
     </div>
 

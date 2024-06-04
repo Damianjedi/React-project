@@ -76,6 +76,20 @@ function Payment() {
 
   return (
     <div className="summary-root-div">
+
+<nav className="navbar">
+        <div className="left-items">
+            <a href="home">Home</a>
+            <a href="menu">Menu</a>
+            <a href="opinie">Oceny</a>
+            <a href="orders">Zamówienia</a>
+        </div>
+        <div className="right-items">
+            <a href="login">Logowanie</a>
+            <a href="register">Rejestracja</a>
+        </div>
+        </nav>
+        
       <h2>Podsumowanie</h2>
       <div className="summary-cart-list-grid">
       <ul>
@@ -171,6 +185,14 @@ function Payment() {
         
         <button type="submit">Zamów</button>
       </form>
+
+      <footer class="footer">
+<p class="copyright">
+    KEBABEE Copyright 
+    <span class="year">© 2024</span> - 
+    All rights reserved
+</p>
+</footer>
     </div>
   );
 }
