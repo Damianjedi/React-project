@@ -1,5 +1,6 @@
 import React from "react";
 import Weather from "./weather";
+import "./Home.css";
 
 
 function Button({ children, onClick }) {
@@ -18,262 +19,10 @@ function ImageWithBorder({ src, alt }) {
 function MyComponent() {
 
   return (
-    <>
-      <style jsx>{`
-      
-        .container {
-          display: flex;
-          flex-direction: column;
-          margin-top: 50px;
-          position: relative;
-        }
 
-        .hero-section {
-          gap: 20px;
-          display: flex;
-          flex-direction: row;
-          position: relative;
-          min-height: 100px;
-          padding: 20px;
-          width: 100%;
-          max-width: 1200px;
-          margin-left: auto;
-          margin-right: auto;
-          justify-content: space-between;
-        }
+    
+<>
 
-        @media (max-width: 991px) {
-          .hero-section {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 0px;
-          }
-        }
-
-        .hero-text {
-          display: flex;
-          flex-direction: column;
-          line-height: normal;
-          max-width: 30%;
-          margin-left: 0px;
-        }
-
-        @media (max-width: 991px) {
-          .hero-text {
-            width: 100%;
-          }
-        }
-
-        .hero-text-content {
-          position: center;
-          height: auto;
-          margin: auto auto auto 10px;
-        }
-
-        .main-image {
-          display: flex;
-          justify-content: center; 
-          align-items: center; 
-          line-height: normal;
-        }
-        
-        .main-image img {
-          display: block;
-          max-width: 100%;
-          justify-content: center; 
-          align-items: center; 
-          line-height: normal;
-        }
-
-        .image-with-border {
-          max-width: 100%;
-          border-radius: 15px;
-        }
-           
-
-        @media (max-width: 991px) {
-          .main-image {
-            width: 100%;
-          }
-        }
-
-        
-
-        .cta-section {
-          display: flex;
-          flex-direction: column;
-          position: relative;
-          min-height: 100px;
-          padding: 20px;
-        }
-
-        .section {
-          display: flex;
-          flex-direction: column;
-          position: relative;
-          min-height: 100px;
-          padding: 20px;
-          width: 100%;
-          flex-grow: 1;
-          max-width: 1200px;
-          margin-left: auto;
-          margin-right: auto;
-        }
-
-        .cta-container {
-          display: flex;
-          flex-direction: column;
-          position: relative;
-          margin-top: 20px;
-          height: auto;
-          padding-bottom: 30px;
-          max-width: 1000px; 
-          width: 100%;
-        }
-
-
-        .cta-content {
-          display: flex;
-          flex-direction: column;
-          position: relative;
-          margin-top: 20px;
-        }
-
-        .cta-row {
-          gap: 20px;
-          display: flex;
-          margin: auto;
-          justify-content: space-between;
-        }
-
-        @media (max-width: 991px) {
-          .cta-row {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 0px;
-          }
-        }
-
-        .button {
-          all: unset;
-          display: flex;
-          flex-direction: column;
-          position: relative;
-          appearance: none;
-          color: rgba(139, 87, 42, 1);
-          border-radius: 10px;
-          text-align: center;
-          cursor: pointer;
-          border-style: ridge;
-          border-width: 2px;
-          font-weight: 600;
-          width: auto;
-          align-self: center;
-          box-shadow: 1px 1px 3px 0 rgba(139, 87, 42, 1);
-          margin: auto;
-          padding: 15px 25px;
-        }
-
-        .cta-text {
-          display: flex;
-          flex-direction: column;
-          line-height: normal;
-          width: 50%;
-          margin-left: 20px;
-        }
-
-        @media (max-width: 991px) {
-          .cta-text {
-            width: 100%;
-          }
-        }
-
-        .cta-text-content {
-          position: relative;
-          height: auto;
-          margin: auto 0;
-        }
-
-        @media (max-width: 640px) {
-          .cta-text-content {
-            margin-top: 20px;
-          }
-        }
-
-        .review-section {
-          display: flex;
-          flex-direction: column;
-          position: relative;
-          min-height: 100px;
-          padding: 20px;
-        }
-
-        .review-content {
-          display: flex;
-          flex-direction: column;
-          position: relative;
-          margin-top: 20px;
-        }
-
-        .review-row {
-          gap: 20px;
-          display: flex;
-          justify-content: space-between;
-        }
-
-        @media (max-width: 991px) {
-          .review-row {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 0px;
-          }
-        }
-
-        .review-text {
-          position: relative;
-          margin-top: 20px;
-          height: auto;
-        }
-
-        .review-image {
-          display: flex;
-          flex-direction: column;
-          line-height: normal;
-          width: 50%;
-          margin-left: 20px;
-        }
-
-        @media (max-width: 991px) {
-          .review-image {
-            width: 100%;
-          }
-        }
-
-        .review-image-content {
-          aspect-ratio: 1;
-          object-fit: cover;
-          object-position: center;
-          width: 100%;
-          min-height: 20px;
-          min-width: 20px;
-          overflow: hidden;
-          max-width: 250px;
-          margin: 20px auto 0;
-        }
-
-
-        .home-weather {
-          margin: 125px auto 50px auto;
-        }
-
-        .home-weather-content img {
-          width: 100%;
-          height: 100%;
-          max-width: 200px;
-          max-height: 200px;
-        }
-
-      `}</style>
 
         <nav className="navbar">
         <div className="left-items">
@@ -383,6 +132,31 @@ function MyComponent() {
           </div>
         </section>
       </div>
+
+      <footer>
+        <div class="footer">
+          <div class="row">
+              <a href="#"><i class="fa fa-facebook"></i></a>
+              <a href="#"><i class="fa fa-instagram"></i></a>
+              <a href="#"><i class="fa fa-youtube"></i></a>
+              <a href="#"><i class="fa fa-twitter"></i></a>
+          </div>
+
+            <div class="row">
+              <ul>
+              <li><a href="#">Zamówienia</a></li>
+              <li><a href="#">Regulamin</a></li>
+              <li><a href="#">O nas</a></li>
+              <li><a href="#">Career</a></li>
+              </ul>
+            </div>
+
+          <div class="row">
+          KEBABEE Copyright © 2024 - All rights reserved 
+          </div>
+          </div>
+          </footer>
+      
     </>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import "./payment.css";
 
 
 
@@ -74,36 +75,49 @@ function Payment() {
   };
 
   return (
-    <div>
-      <h2>Summary</h2>
+    <div className="summary-root-div">
+      <h2>Podsumowanie</h2>
+      <div className="summary-cart-list-grid">
       <ul>
         {cartItems.map((item, index) => (
-          <li key={index}>{item.product} - Cena: {item.Cena} zł - Ilość: {item.quantity}</li>
+          <li key={index}>Produkt: {item.product} | Cena: {item.Cena} zł/szt | Ilość: {item.quantity}</li>
         ))}
       </ul>
-      <h2>Total Price: {totalPrice} zł</h2>
+      </div>
+      <h2>Suma: {totalPrice} zł</h2>
 
       <h3>Szczegóły zamówienia</h3>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="summary-add-product-form">
         <div>
           <label>
-            Typ zamówienia:
             <select name="orderType" value={orderType} onChange={handleOrderTypeChange} required>
-              <option value="">Wybierz</option>
+              <option value=""> Typ zamówienia</option>
               <option value="na miejscu">Na miejscu</option>
               <option value="odbior wlasny">Odbiór własny</option>
               <option value="dostawa">Dostawa</option>
             </select>
           </label>
         </div>
+
+        <div>
+          <label>
+            <select name="paymentMethod" value={paymentMethod} onChange={handlePaymentMethodChange} required>
+              <option value="">Metoda płatnosci</option>
+              <option value="cash">Gotówka</option>
+              <option value="card">Karta</option>
+              <option value="online">Online</option>
+            </select>
+          </label>
+
+         </div>
         
         {orderType === 'na miejscu' && (
           <div>
             <label>
-              Numer stolika:
               <input
                 type="text"
                 name="tableNumber"
+                placeholder="Numer stolika"
                 value={tableNumber}
                 onChange={handleInputChange}
                 required={orderType === 'na miejscu'}
@@ -115,10 +129,10 @@ function Payment() {
         {orderType === 'dostawa' && (
           <div>
             <label>
-              Adres:
               <input
                 type="text"
                 name="address"
+                placeholder="Adres"
                 value={address}
                 onChange={handleInputChange}
                 required={orderType === 'dostawa'}
@@ -126,13 +140,14 @@ function Payment() {
             </label>
           </div>
         )}
+
         
         <div>
           <label>
-            Imię:
             <input
               type="text"
               name="name"
+              placeholder="Imie"
               value={contactInfo.name}
               onChange={handleInputChange}
               required
@@ -142,29 +157,17 @@ function Payment() {
         
         <div>
           <label>
-            Numer telefonu:
             <input
               type="text"
               name="phone"
+              placeholder="Numer telefonu"
               value={contactInfo.phone}
               onChange={handleInputChange}
               required
             />
           </label>
         </div>
-        
-        <div>
-          <label>
-            Metoda Płatności:
-            <select name="paymentMethod" value={paymentMethod} onChange={handlePaymentMethodChange} required>
-              <option value="">Wybierz</option>
-              <option value="cash">Gotówka</option>
-              <option value="card">Karta</option>
-              <option value="online">Online</option>
-            </select>
-          </label>
-
-         </div>
+      
         
         <button type="submit">Zamów</button>
       </form>
