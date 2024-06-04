@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import "./payment.css";
 
@@ -9,6 +9,7 @@ function Payment() {
   const location = useLocation();
   const { cartItems, totalPrice } = location.state || { cartItems: [], totalPrice: 0 };
   const [token, setToken] = useState('');
+  const navigate = useNavigate()
 
 
   const [orderType, setOrderType] = useState('');
@@ -67,6 +68,7 @@ function Payment() {
           }
         });
         console.log('Order submitted successfully:', response.data);
+        navigate('/yourorderstatus')
         // You can add further actions here, like redirecting the user or showing a success message
       } catch (error) {
         console.error('Error submitting order:', error);

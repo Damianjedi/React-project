@@ -39,13 +39,16 @@ const authenticateToken = require('./middleware/authMiddleware');
 //AxiosError
 
 const mongoose = require("mongoose");
-mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@react.iuhwkob.mongodb.net/${process.env.DB_NAME}`)
-.then(() => {
+const connectDB = async () => {
+  try {
+    await mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@react.iuhwkob.mongodb.net/${process.env.DB_NAME}`);
     console.log('Połączono z bazą danych');
-  })
-  .catch((err) => {
+  } catch (err) {
     console.error('Błąd połączenia z bazą danych:', err);
-  });
+  }
+};
+
+connectDB();
 
   app.post('/register', async (req, res) => {
     try {
@@ -69,9 +72,7 @@ mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASS
     }
 });
 
-function hashLogin(login) {
-  return crypto.createHash('sha256').update(login).digest('hex');
-}
+
 
 app.post('/login', async (req, res) => {
   try {
@@ -131,6 +132,9 @@ app.delete('/menu/:id', async (req, res) => {
   try {
     const id = req.params.id;
     await Kebab.findByIdAndDelete(id);
+    if (!deletedItem) {
+      return res.status(404).send('Produkt nie został znaleziony.');
+    }
     res.status(200).send('Produkt został pomyślnie usunięty.');
   } catch (error) {
     console.error('Błąd podczas usuwania produktu:', error);
@@ -194,9 +198,6 @@ app.post('/orders', authenticateToken, async (req, res) => {
     user,
     
   });
-
-
-  
     const savedOrder = await newOrder.save();
     res.status(201).json(savedOrder);
   } catch (error) {
@@ -258,3 +259,5 @@ app.get('/orders/user', authenticateToken, async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
+
+module.exports = app;
