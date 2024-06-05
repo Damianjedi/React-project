@@ -93,10 +93,10 @@ function Signup() {
     </form>
     </div>
 
-    <footer class="footer">
-<p class="copyright">
+    <footer className="footer">
+<p className="copyright">
     KEBABEE Copyright 
-    <span class="year">© 2024</span> - 
+    <span className="year">© 2024</span> - 
     All rights reserved
 </p>
 </footer>

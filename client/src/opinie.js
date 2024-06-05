@@ -8,14 +8,20 @@ function Opinions() {
   const [newOpinionText, setNewOpinionText] = useState('');
   const [token, setToken] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
 
+
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    const loggedIn = localStorage.getItem('isLoggedIn');
-    if (storedToken && loggedIn) {
-      setToken(storedToken);
+    const loggedIn = localStorage.getItem("isLoggedIn");
+    const storedToken = localStorage.getItem("token");
+    const adminStatus = localStorage.getItem("isAdmin");
+    if (loggedIn && storedToken) {
       setIsLoggedIn(true);
+      setToken(storedToken);
+    }
+    if (adminStatus) {
+      setIsAdmin(true);
     }
   }, []);
 
@@ -75,33 +81,26 @@ function Opinions() {
     <>
 
 <nav className="navbar">
-      {isLoggedIn ? (
         <div className="left-items">
-            <a href="home">Home</a>
-            <a href="menu">Menu</a>
-            <a href="opinie">Oceny</a>
-            <a href="orders">Zamówienia</a>
-            <a href="yourorderstatus">Twoje zamówienia</a>
+          <a href="home">Home</a>
+          <a href="menu">Menu</a>
+          <a href="opinie">Oceny</a>
+          {isLoggedIn && isAdmin && <a href="orders">Zamówienia</a>}
+          {isLoggedIn && <a href="yourorderstatus">Twoje zamówienia</a>}
         </div>
-      ) : (
-        <div className="left-items">
-            <a href="home">Home</a>
-            <a href="menu">Menu</a>
-            <a href="opinie">Oceny</a>
-            <a href="orders">Zamówienia</a>
-        </div>
-      )}
-      {isLoggedIn ? (
         <div className="right-items">
-          <a href="home" onClick={handleLogout}>Wyloguj</a>
+          {isLoggedIn ? (
+            <a href="home" onClick={handleLogout}>
+              Wyloguj
+            </a>
+          ) : (
+            <>
+              <a href="login">Logowanie</a>
+              <a href="register">Rejestracja</a>
+            </>
+          )}
         </div>
-      ) : (
-        <div className="right-items">
-            <a href="login">Logowanie</a>
-            <a href="register">Rejestracja</a>
-        </div>
-      )}
-        </nav>
+      </nav>
     
   
 
@@ -141,10 +140,10 @@ function Opinions() {
 
       
 
-      <footer class="footer">
-<p class="copyright">
+      <footer className="footer">
+<p className="copyright">
     KEBABEE Copyright 
-    <span class="year">© 2024</span> - 
+    <span className="year">© 2024</span> - 
     All rights reserved
 </p>
 </footer>

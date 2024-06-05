@@ -39,7 +39,7 @@ const authenticateToken = require('./middleware/authMiddleware');
 //AxiosError
 
 const mongoose = require("mongoose");
-const connectDB = async () => {
+const connectDB = async () => { //Połączenie z bazą danych
   try {
     await mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@react.iuhwkob.mongodb.net/${process.env.DB_NAME}`);
     console.log('Połączono z bazą danych');
@@ -50,10 +50,10 @@ const connectDB = async () => {
 
 connectDB();
 
-  app.post('/register', async (req, res) => {
+  app.post('/register', async (req, res) => { //endpoint rejestracja użytkownika
     try {
-        const existingUser = await User.findOne({ login: req.body.login });
-        if (existingUser) {
+        const existingUser = await User.findOne({ login: req.body.login }); //sprawdzanie czy istnieje już taki użytkownik w bazie
+        if (existingUser) {  
             return res.status(400).json({ message: "Nazwa użytkownika jest już zajęta" });
         }
 
@@ -65,7 +65,7 @@ connectDB();
         login: req.body.login,
         password: req.body.password,
 });
-        res.status(201).json(newUser);
+        res.status(201).json(newUser);  //rejestracja użytkownika
     } catch (err) {
         console.error('Błąd podczas rejestracji użytkownika:', err);
         res.status(500).json({ message: "Wystąpił błąd podczas rejestracji użytkownika" });
@@ -74,7 +74,7 @@ connectDB();
 
 
 
-app.post('/login', async (req, res) => {
+app.post('/login', async (req, res) => { //endpoint logowania użytkownika
   try {
       const { login, password } = req.body;
       
@@ -92,7 +92,7 @@ app.post('/login', async (req, res) => {
 
       const token = `user-${user._id}`;
 
-      if (user.roleId === 2) {
+      if (user.roleId === 2) {    // Jeśli użytkownik jest administratorem przypisz token
         res.status(200).json({ id: user.roleId, login: user.login, isAdmin: true, token });
     } else {
         // Jeśli użytkownik nie jest administratorem, zwróć standardowy status 200
@@ -106,7 +106,7 @@ app.post('/login', async (req, res) => {
 });
 
 
-app.get('/menu', async (req, res) => {
+app.get('/menu', async (req, res) => { //endpoint do pobierania danych z bazy
   try {
     const menuItems = await Kebab.find();
     res.json(menuItems);
@@ -116,7 +116,7 @@ app.get('/menu', async (req, res) => {
   }
 });
 
-app.post('/menu', async (req, res) => {
+app.post('/menu', async (req, res) => { //endpoint do dodawania produktów do menu
   try {
     const { product, Opis, Cena, imageUrl } = req.body;
     const newItem = new Kebab({ product, Opis, Cena, imageUrl });
@@ -128,7 +128,7 @@ app.post('/menu', async (req, res) => {
   }
 });
 
-app.delete('/menu/:id', async (req, res) => {
+app.delete('/menu/:id', async (req, res) => { //endpoint do usuwania produktów z menu
   try {
     const id = req.params.id;
     await Kebab.findByIdAndDelete(id);
@@ -143,7 +143,7 @@ app.delete('/menu/:id', async (req, res) => {
 });
 
 
-app.get('/opinions', async (req, res) => {
+app.get('/opinions', async (req, res) => {  //endpoint do pobierania opini z bazy
   try {
     const opinions = await Opinion.find().populate('user', 'login'); // Pobranie opinii wraz z danymi użytkownika (tylko login)
     res.json(opinions);
@@ -153,7 +153,7 @@ app.get('/opinions', async (req, res) => {
   }
 });
 
-app.post('/opinions', authenticateToken, async (req, res) => {
+app.post('/opinions', authenticateToken, async (req, res) => { //endpoint do dodawania opini do bazy i przypisywanie nazwy użytkownika po zczytaniu tokena
   const { text } = req.body;
   const userId = req.userId;
 
@@ -176,7 +176,7 @@ app.post('/opinions', authenticateToken, async (req, res) => {
   }
 });
 
-app.post('/orders', authenticateToken, async (req, res) => {
+app.post('/orders', authenticateToken, async (req, res) => { //endpoint do składania zamówień
   const { orderType, tableNumber, address, contactInfo, paymentMethod, cartItems, totalPrice } = req.body;
   const userId = req.userId;
 
@@ -207,7 +207,7 @@ app.post('/orders', authenticateToken, async (req, res) => {
 });
 
 
-app.get('/orders', async (req, res) => {
+app.get('/orders', async (req, res) => { //endpoint do pobierania danych zamówień z bazy
   try {
     const orders = await Order.find().populate('user', 'login');
     res.status(200).json(orders);
@@ -216,10 +216,9 @@ app.get('/orders', async (req, res) => {
   }
 });
 
-// Delete an order
-app.delete('/orders/:id', async (req, res) => {
+app.delete('/orders/:id', async (req, res) => {// endpoint do usuwania zamówień
+      const { id } = req.params;
   try {
-    const { id } = req.params;
     const deletedOrder = await Order.findByIdAndDelete(id);
     if (!deletedOrder) {
       return res.status(404).json({ error: 'Order not found' });
@@ -230,7 +229,7 @@ app.delete('/orders/:id', async (req, res) => {
   }
 });
 
-app.put('/orders/:id', async (req, res) => {
+app.put('/orders/:id', async (req, res) => {//endpoint do aktualizacji statusu zamówień
   try {
     const { id } = req.params;
     const { status } = req.body;
@@ -244,7 +243,7 @@ app.put('/orders/:id', async (req, res) => {
   }
 });
 
-app.get('/orders/user', authenticateToken, async (req, res) => {
+app.get('/orders/user', authenticateToken, async (req, res) => { //endpoint do zczytywania zamówień klientów w zakładce yourorderstatus
   try {
     const userId = req.userId;
     const orders = await Order.find({ user: userId }).populate('user', 'login');

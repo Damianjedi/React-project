@@ -10,6 +10,8 @@ function Payment() {
   const { cartItems, totalPrice } = location.state || { cartItems: [], totalPrice: 0 };
   const [token, setToken] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
 
   const navigate = useNavigate()
 
@@ -22,11 +24,15 @@ function Payment() {
   const [username, setUsername] = useState('');
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    const loggedIn = localStorage.getItem('isLoggedIn');
-    if (storedToken && loggedIn) {
-      setToken(storedToken);
+    const loggedIn = localStorage.getItem("isLoggedIn");
+    const storedToken = localStorage.getItem("token");
+    const adminStatus = localStorage.getItem("isAdmin");
+    if (loggedIn && storedToken) {
       setIsLoggedIn(true);
+      setToken(storedToken);
+    }
+    if (adminStatus) {
+      setIsAdmin(true);
     }
   }, []);
 
@@ -80,37 +86,48 @@ function Payment() {
       }
   };
 
+  const handleLogout = () => {
+    // Usuwanie konkretnych kluczy z localStorage
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('isAdmin');
+    
+    // Usuwanie wszystkich danych z localStorage
+    localStorage.clear();
+    
+    // Usuwanie wszystkich danych z sessionStorage
+    sessionStorage.clear();
+    
+    // Usuwanie cookies
+    document.cookie.split(";").forEach((c) => {
+      document.cookie = c.trim().split("=")[0] + '=;expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+    });
+    window.location.href = '/home';
+  };
+
   return (
     <div className="summary-root-div">
 
 <nav className="navbar">
-      {isLoggedIn ? (
         <div className="left-items">
-            <a href="home">Home</a>
-            <a href="menu">Menu</a>
-            <a href="opinie">Oceny</a>
-            <a href="orders">Zamówienia</a>
-            <a href="yourorderstatus">Twoje zamówienia</a>
+          <a href="home">Home</a>
+          <a href="menu">Menu</a>
+          <a href="opinie">Oceny</a>
+          {isLoggedIn && isAdmin && <a href="orders">Zamówienia</a>}
+          {isLoggedIn && <a href="yourorderstatus">Twoje zamówienia</a>}
         </div>
-      ) : (
-        <div className="left-items">
-            <a href="home">Home</a>
-            <a href="menu">Menu</a>
-            <a href="opinie">Oceny</a>
-            <a href="orders">Zamówienia</a>
-        </div>
-      )}
-      {isLoggedIn ? (
         <div className="right-items">
-          <a href="home">Wyloguj</a>
+          {isLoggedIn ? (
+            <a href="home" onClick={handleLogout}>
+              Wyloguj
+            </a>
+          ) : (
+            <>
+              <a href="login">Logowanie</a>
+              <a href="register">Rejestracja</a>
+            </>
+          )}
         </div>
-      ) : (
-        <div className="right-items">
-            <a href="login">Logowanie</a>
-            <a href="register">Rejestracja</a>
-        </div>
-      )}
-        </nav>
+      </nav>
         
       <h2>Podsumowanie</h2>
       <div className="summary-cart-list-grid">
@@ -208,10 +225,10 @@ function Payment() {
         <button type="submit">Zamów</button>
       </form>
 
-      <footer class="footer">
-<p class="copyright">
+      <footer className="footer">
+<p className="copyright">
     KEBABEE Copyright 
-    <span class="year">© 2024</span> - 
+    <span className="year">© 2024</span> - 
     All rights reserved
 </p>
 </footer>

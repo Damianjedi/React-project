@@ -8,16 +8,18 @@ function Menu() {
   const [cartItems, setCartItems] = useState([]);
   const [newItemData, setNewItemData] = useState({ product: '', Opis: '', Cena: '', imageUrl: '' });
   const [totalPrice, setTotalPrice] = useState(0);
-  const [isAdmin, setisAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const Admin = localStorage.getItem('isAdmin');
-    const loggedIn = localStorage.getItem('isLoggedIn');
-    if (Admin && loggedIn) {
-      setisAdmin(true);
+    const loggedIn = localStorage.getItem("isLoggedIn");
+    const adminStatus = localStorage.getItem("isAdmin");
+    if (loggedIn) {
       setIsLoggedIn(true);
+    }
+    if (adminStatus) {
+      setIsAdmin(true);
     }
   }, []);
 
@@ -89,12 +91,18 @@ function Menu() {
 
   const deleteProduct = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/menu/${id}`);
+      const response = await axios.delete(`http://localhost:3001/menu/${id}`);
+      if (response.status === 200) {
       fetchMenuItems();
-      window.location.reload();
-    } catch (error) {
-      console.error('Błąd przy usuwaniu produktu', error);
+    } else {
+      console.error('Unexpected response status:', response.status);
+      fetchMenuItems();
     }
+  } catch (error) {
+    console.error('Błąd przy usuwaniu produktu:', error.response ? error.response.data : error.message);
+    fetchMenuItems();
+
+  }
   };
 
   const calculateTotalPrice = () => {
@@ -126,39 +134,29 @@ function Menu() {
 
   return (
 
-    
-
-    
     <div>
 
 <nav className="navbar">
-      {isLoggedIn ? (
         <div className="left-items">
-            <a href="home">Home</a>
-            <a href="menu">Menu</a>
-            <a href="opinie">Oceny</a>
-            <a href="orders">Zamówienia</a>
-            <a href="yourorderstatus">Twoje zamówienia</a>
+          <a href="home">Home</a>
+          <a href="menu">Menu</a>
+          <a href="opinie">Oceny</a>
+          {isLoggedIn && isAdmin && <a href="orders">Zamówienia</a>}
+          {isLoggedIn && <a href="yourorderstatus">Twoje zamówienia</a>}
         </div>
-      ) : (
-        <div className="left-items">
-            <a href="home">Home</a>
-            <a href="menu">Menu</a>
-            <a href="opinie">Oceny</a>
-            <a href="orders">Zamówienia</a>
-        </div>
-      )}
-      {isLoggedIn ? (
         <div className="right-items">
-          <a href="home" onClick={handleLogout}>Wyloguj</a>
+          {isLoggedIn ? (
+            <a href="home" onClick={handleLogout}>
+              Wyloguj
+            </a>
+          ) : (
+            <>
+              <a href="login">Logowanie</a>
+              <a href="register">Rejestracja</a>
+            </>
+          )}
         </div>
-      ) : (
-        <div className="right-items">
-            <a href="login">Logowanie</a>
-            <a href="register">Rejestracja</a>
-        </div>
-      )}
-        </nav>
+      </nav>
       
       { isAdmin ? (
       <div>
@@ -252,10 +250,10 @@ function Menu() {
       <button id="goToPayment" onClick={goToPayment} disabled={cartItems.length === 0}>Przejdź do podsumowania</button>
       </div>
 
-      <footer class="footer">
-<p class="copyright">
+      <footer className="footer">
+<p className="copyright">
     KEBABEE Copyright 
-    <span class="year">© 2024</span> - 
+    <span className="year">© 2024</span> - 
     All rights reserved
 </p>
 </footer>

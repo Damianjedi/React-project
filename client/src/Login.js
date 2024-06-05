@@ -1,5 +1,5 @@
 import "./Signup.css";
-import {useState} from "react"
+import {useState, useEffect} from "react"
 import axios from 'axios'
 import {Link} from "react-router-dom"
 import { useNavigate } from "react-router-dom"
@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom"
 function Login() {
     const [login, setLogin] = useState('')
     const [password , setPassword] = useState('')
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
     const navigate = useNavigate()
 
     
@@ -45,21 +47,41 @@ function Login() {
         }
     };
 
+    useEffect(() => {
+        const loggedIn = localStorage.getItem("isLoggedIn");
+        const adminStatus = localStorage.getItem("isAdmin");
+        if (loggedIn) {
+          setIsLoggedIn(true);
+        }
+        if (adminStatus) {
+          setIsAdmin(true);
+        }
+      }, []);
+
     return (
         
         <div>
         <nav className="navbar">
         <div className="left-items">
-            <a href="home">Home</a>
-            <a href="menu">Menu</a>
-            <a href="opinie">Oceny</a>
-            <a href="orders">Zamówienia</a>
+          <a href="home">Home</a>
+          <a href="menu">Menu</a>
+          <a href="opinie">Oceny</a>
+          {isLoggedIn && isAdmin && <a href="orders">Zamówienia</a>}
+          {isLoggedIn && <a href="yourorderstatus">Twoje zamówienia</a>}
         </div>
         <div className="right-items">
-            <a href="login">Logowanie</a>
-            <a href="register">Rejestracja</a>
+          {isLoggedIn ? (
+            <a href="home" >
+              Wyloguj
+            </a>
+          ) : (
+            <>
+              <a href="login">Logowanie</a>
+              <a href="register">Rejestracja</a>
+            </>
+          )}
         </div>
-        </nav>
+      </nav>
 
     <div className="signup-container">
     <h1>Logowanie</h1>
@@ -72,10 +94,10 @@ function Login() {
     </form>
     </div>
 
-    <footer class="footer">
-        <p class="copyright">
+    <footer className="footer">
+        <p className="copyright">
             KEBABEE Copyright 
-            <span class="year">© 2024</span> - 
+            <span className="year">© 2024</span> - 
             All rights reserved
         </p>
     </footer>
