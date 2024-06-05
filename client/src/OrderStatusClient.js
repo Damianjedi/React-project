@@ -4,9 +4,22 @@ import axios from 'axios';
 function OrderStatusClient() {
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [token, setToken] = useState('');
+
+
+
+  useEffect(() => {
+    const loggedIn = localStorage.getItem('isLoggedIn');
+    if (loggedIn) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
 
   useEffect(() => {
     fetchUserOrders();
+    
   }, []);
 
   const fetchUserOrders = async () => {
@@ -33,16 +46,32 @@ function OrderStatusClient() {
     <div>
 
 <nav className="navbar">
+      {isLoggedIn ? (
+        <div className="left-items">
+            <a href="home">Home</a>
+            <a href="menu">Menu</a>
+            <a href="opinie">Oceny</a>
+            <a href="orders">Zamówienia</a>
+            <a href="yourorderstatus">Twoje zamówienia</a>
+        </div>
+      ) : (
         <div className="left-items">
             <a href="home">Home</a>
             <a href="menu">Menu</a>
             <a href="opinie">Oceny</a>
             <a href="orders">Zamówienia</a>
         </div>
+      )}
+      {isLoggedIn ? (
+        <div className="right-items">
+          <a href="home">Wyloguj</a>
+        </div>
+      ) : (
         <div className="right-items">
             <a href="login">Logowanie</a>
             <a href="register">Rejestracja</a>
         </div>
+      )}
         </nav>
         
       <h2>Twoje zamówienia</h2>

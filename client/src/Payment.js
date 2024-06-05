@@ -9,6 +9,8 @@ function Payment() {
   const location = useLocation();
   const { cartItems, totalPrice } = location.state || { cartItems: [], totalPrice: 0 };
   const [token, setToken] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const navigate = useNavigate()
 
 
@@ -21,8 +23,10 @@ function Payment() {
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
-    if (storedToken) {
+    const loggedIn = localStorage.getItem('isLoggedIn');
+    if (storedToken && loggedIn) {
       setToken(storedToken);
+      setIsLoggedIn(true);
     }
   }, []);
 
@@ -80,16 +84,32 @@ function Payment() {
     <div className="summary-root-div">
 
 <nav className="navbar">
+      {isLoggedIn ? (
+        <div className="left-items">
+            <a href="home">Home</a>
+            <a href="menu">Menu</a>
+            <a href="opinie">Oceny</a>
+            <a href="orders">Zamówienia</a>
+            <a href="yourorderstatus">Twoje zamówienia</a>
+        </div>
+      ) : (
         <div className="left-items">
             <a href="home">Home</a>
             <a href="menu">Menu</a>
             <a href="opinie">Oceny</a>
             <a href="orders">Zamówienia</a>
         </div>
+      )}
+      {isLoggedIn ? (
+        <div className="right-items">
+          <a href="home">Wyloguj</a>
+        </div>
+      ) : (
         <div className="right-items">
             <a href="login">Logowanie</a>
             <a href="register">Rejestracja</a>
         </div>
+      )}
         </nav>
         
       <h2>Podsumowanie</h2>

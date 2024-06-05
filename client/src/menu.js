@@ -9,12 +9,15 @@ function Menu() {
   const [newItemData, setNewItemData] = useState({ product: '', Opis: '', Cena: '', imageUrl: '' });
   const [totalPrice, setTotalPrice] = useState(0);
   const [isAdmin, setisAdmin] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const Admin = localStorage.getItem('isAdmin');
-    if (Admin) {
+    const loggedIn = localStorage.getItem('isLoggedIn');
+    if (Admin && loggedIn) {
       setisAdmin(true);
+      setIsLoggedIn(true);
     }
   }, []);
 
@@ -88,6 +91,7 @@ function Menu() {
     try {
       await axios.delete(`http://localhost:3001/menu/${id}`);
       fetchMenuItems();
+      window.location.reload();
     } catch (error) {
       console.error('Błąd przy usuwaniu produktu', error);
     }
@@ -102,6 +106,24 @@ function Menu() {
     navigate('/payment', { state: { cartItems, totalPrice}});
   };
 
+  const handleLogout = () => {
+    // Usuwanie konkretnych kluczy z localStorage
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('isAdmin');
+    
+    // Usuwanie wszystkich danych z localStorage
+    localStorage.clear();
+    
+    // Usuwanie wszystkich danych z sessionStorage
+    sessionStorage.clear();
+    
+    // Usuwanie cookies
+    document.cookie.split(";").forEach((c) => {
+      document.cookie = c.trim().split("=")[0] + '=;expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+    });
+    window.location.href = '/home';
+  };
+
   return (
 
     
@@ -110,16 +132,32 @@ function Menu() {
     <div>
 
 <nav className="navbar">
+      {isLoggedIn ? (
+        <div className="left-items">
+            <a href="home">Home</a>
+            <a href="menu">Menu</a>
+            <a href="opinie">Oceny</a>
+            <a href="orders">Zamówienia</a>
+            <a href="yourorderstatus">Twoje zamówienia</a>
+        </div>
+      ) : (
         <div className="left-items">
             <a href="home">Home</a>
             <a href="menu">Menu</a>
             <a href="opinie">Oceny</a>
             <a href="orders">Zamówienia</a>
         </div>
+      )}
+      {isLoggedIn ? (
+        <div className="right-items">
+          <a href="home" onClick={handleLogout}>Wyloguj</a>
+        </div>
+      ) : (
         <div className="right-items">
             <a href="login">Logowanie</a>
             <a href="register">Rejestracja</a>
         </div>
+      )}
         </nav>
       
       { isAdmin ? (

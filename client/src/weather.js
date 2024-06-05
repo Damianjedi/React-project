@@ -47,7 +47,6 @@ const Weather = () => {
           <h2>{weatherData.name}</h2>
           <p>Temperatura: {weatherData.main.temp}°C</p>
           <p>Opis: {weatherData.weather[0].description}</p>
-          <p>Odczuwalna: {weatherData.main.feels_like}°C</p>
           <p>Wilgotnosc: {weatherData.main.humidity}%</p>
           <p>Cisnienie: {weatherData.main.pressure}hPa</p>
           <p>Predkosc wiatru: {weatherData.wind.speed}m/s</p>

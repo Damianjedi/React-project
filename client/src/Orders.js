@@ -3,6 +3,19 @@ import axios from 'axios';
 
 function Orders() {
   const [orders, setOrders] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setisAdmin] = useState(false);
+
+
+  useEffect(() => {
+    const Admin = localStorage.getItem('isAdmin');
+    const loggedIn = localStorage.getItem('isLoggedIn');
+    if (Admin && loggedIn) {
+      setisAdmin(true);
+      setIsLoggedIn(true);
+    }
+  }, []);
+
 
   useEffect(() => {
     fetchOrders();
@@ -39,16 +52,34 @@ function Orders() {
     <div>
 
 <nav className="navbar">
+      {isLoggedIn ? (
+        <div className="left-items">
+            <a href="home">Home</a>
+            <a href="menu">Menu</a>
+            <a href="opinie">Oceny</a>
+            
+            <a href="orders">Zamówienia</a>
+            
+            <a href="yourorderstatus">Twoje zamówienia</a>
+        </div>
+      ) : (
         <div className="left-items">
             <a href="home">Home</a>
             <a href="menu">Menu</a>
             <a href="opinie">Oceny</a>
             <a href="orders">Zamówienia</a>
         </div>
+      )}
+      {isLoggedIn ? (
+        <div className="right-items">
+          <a href="home">Wyloguj</a>
+        </div>
+      ) : (
         <div className="right-items">
             <a href="login">Logowanie</a>
             <a href="register">Rejestracja</a>
         </div>
+      )}
         </nav>
         
       <h2>Orders</h2>

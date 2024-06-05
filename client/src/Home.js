@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import Weather from "./weather";
 import "./Home.css";
 
@@ -17,24 +17,64 @@ function ImageWithBorder({ src, alt }) {
 
 
 function MyComponent() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const handleLogout = () => {
+    // Usuwanie konkretnych kluczy z localStorage
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('isAdmin');
+    
+    // Usuwanie wszystkich danych z localStorage
+    localStorage.clear();
+    
+    // Usuwanie wszystkich danych z sessionStorage
+    sessionStorage.clear();
+    
+    // Usuwanie cookies
+    document.cookie.split(";").forEach((c) => {
+      document.cookie = c.trim().split("=")[0] + '=;expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+    });
+    window.location.href = '/home';
+  };
+    
+  useEffect(() => {
+    const loggedIn = localStorage.getItem('isLoggedIn');
+    if (loggedIn) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   return (
 
     
 <>
 
-
 <nav className="navbar">
+      {isLoggedIn ? (
+        <div className="left-items">
+            <a href="home">Home</a>
+            <a href="menu">Menu</a>
+            <a href="opinie">Oceny</a>
+            <a href="orders">Zamówienia</a>
+            <a href="yourorderstatus">Twoje zamówienia</a>
+        </div>
+      ) : (
         <div className="left-items">
             <a href="home">Home</a>
             <a href="menu">Menu</a>
             <a href="opinie">Oceny</a>
             <a href="orders">Zamówienia</a>
         </div>
+      )}
+      {isLoggedIn ? (
+        <div className="right-items">
+          <a href="home" onClick={handleLogout}>Wyloguj</a>
+        </div>
+      ) : (
         <div className="right-items">
             <a href="login">Logowanie</a>
             <a href="register">Rejestracja</a>
         </div>
+      )}
         </nav>
 
 
